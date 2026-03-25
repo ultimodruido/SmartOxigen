@@ -13,6 +13,7 @@ state machine:
   - read messages in async and emit corresponding signal
 """
 import asyncio
+import json
 
 from websockets.asyncio.client import connect, ClientConnection
 from websockets.exceptions import ConnectionClosed
@@ -24,12 +25,28 @@ _messages_queue = list()
 async def smartrace_send(connection:ClientConnection):
     pass
 
+managed_events = {
+    "update_controller_data": smartrace_events.player_list,
+    "api_version": smartrace_events.api_version,
+    "update_pit": smartrace_events.update_pit,
+    "update_event_status": smartrace_events.update_event_status,
+    "update_controller_state": smartrace_events.update_controller_state,
+}
+
 async def smartrace_receive(connection:ClientConnection):
     async for message in connection:
         #print("### tablet2sensor ###")
 
         try:
             print(message)
+            # convert message to dictionary
+            message_json = json.loads(message)
+            # emit signal if event is handled
+            try:
+                managed_events[message_json["type"]].emit(message_json["data"])
+            except KeyError:
+                print('skipped key error')
+
 
         except ConnectionClosed:
             print("smartrace_receive ConnectionClosed exception")
@@ -42,6 +59,7 @@ async def smartrace_connect(server:str, port:str) -> None:
         try:
             smartrace_events.connection_successful.emit()
 
+            _messages_queue.append('{"type": "controller_set", "data": {"controller_id": "X"}}')
             try:
                 await asyncio.gather[
                     await smartrace_send(smartrace_socket),

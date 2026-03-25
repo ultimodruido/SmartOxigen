@@ -13,6 +13,18 @@ class Events:
     # notify received API version
     api_version = Signal(int)
 
+    # notify received player list
+    player_list = Signal(dict)
+
+    # smartrace registered pit
+    update_pit = Signal(dict)
+
+    # race status
+    update_event_status = Signal(str)
+
+    # controller status
+    update_controller_state = Signal(dict)
+
     """
     # info new data available ready for transmission
     transmit_command_event = Signal(bytes)
