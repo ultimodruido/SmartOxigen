@@ -23,7 +23,20 @@ from .smartrace_events import smartrace_events
 _messages_queue = list()
 
 async def smartrace_send(connection:ClientConnection):
-    pass
+    while True:
+        #print("Smartrace send")
+        #message = await connection.recv()
+        try:
+            if _messages_queue:
+                await connection.send(_messages_queue[0])
+                print(f"Smartrace sending: {_messages_queue[0]}")
+                _messages_queue.pop(0)
+
+        except ConnectionClosed:
+            print("Smartrace sending: interrupted")
+
+
+        await asyncio.sleep(1)
 
 managed_events = {
     "update_controller_data": smartrace_events.player_list,
@@ -45,7 +58,7 @@ async def smartrace_receive(connection:ClientConnection):
             try:
                 managed_events[message_json["type"]].emit(message_json["data"])
             except KeyError:
-                print('skipped key error')
+                print('message received but skipped key error')
 
 
         except ConnectionClosed:
@@ -58,13 +71,14 @@ async def smartrace_connect(server:str, port:str) -> None:
     async for smartrace_socket in connect(f"ws://{server}:{port}"):
         try:
             smartrace_events.connection_successful.emit()
-
+            _messages_queue.append('{"type": "api_version"}')
             _messages_queue.append('{"type": "controller_set", "data": {"controller_id": "X"}}')
             try:
-                await asyncio.gather[
-                    await smartrace_send(smartrace_socket),
-                    await smartrace_receive(smartrace_socket)
-                ]
+                tasks_list = [
+                    smartrace_send(smartrace_socket),
+                    smartrace_receive(smartrace_socket)
+                    ]
+                await asyncio.gather(*tasks_list)
             except TypeError:
                 smartrace_events.connection_closed.emit()
                 print("Server interrupted")

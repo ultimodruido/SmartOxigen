@@ -26,7 +26,7 @@ from smartrace.smartrace_events import smartrace_events
 ##############################
 @gui_events.smartrace_connect_request.subscribe
 async def smartrace_connect_request(server: str, port: int):
-    print(f'Connectiong "{server}"...{port}')
+    print(f'Connecting "{server}"...{port}')
     await smartrace_connect(server, str(port))
     #await asyncio.sleep(1)  # simulate writing to database
 
