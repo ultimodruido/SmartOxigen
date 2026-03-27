@@ -1,6 +1,8 @@
 """
 Bridge for important values between modules
 """
+from gui import gui_events
+
 smartrace_server = ''
 smartrace_port = 0
 smartrace_send_queue = list()
@@ -51,3 +53,8 @@ player_3_oxigen_active = False
 player_4_oxigen_active = False
 player_5_oxigen_active = False
 player_6_oxigen_active = False
+
+####
+# race data
+####
+race_status = 'Unknown'

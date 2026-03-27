@@ -1,8 +1,21 @@
-import asyncio
+"""
+Logic module
+------------
+
+SmartOxigen concept divides the system in 3 macro-blocks:
+ - GUI
+ - Smartrace interface
+ - Oxigen interface
+
+Each of the 3 blocks manages events to communicate with external libraries.
+While Smartrace and Oxigen rely on psygnal module, nicegui has its own internal event system.
+
+This module is the sole link between the 3 blocks. Here inside are the logical rules to
+exchange and convert information
+"""
 
 import shared_data
-#import shared_data
-from nicegui import ui
+
 from gui import gui_events
 from smartrace.smartrace_main import smartrace_connect
 from smartrace.smartrace_events import smartrace_events
@@ -63,3 +76,11 @@ def smartrace_player_list(data: dict):
     shared_data.player_6_color = data['6']['color']
     shared_data.player_6_bgcolor = data['6']['backgroundColor']
     gui_events.smartrace_player_color_update_request.emit()
+
+##############################
+# race status handling events
+##############################
+@smartrace_events.update_event_status.connect
+def smartrace_race_update(data: str):
+    shared_data.race_status = data
+    gui_events.smartrace_race_update_status.emit(data)
