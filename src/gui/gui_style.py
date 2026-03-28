@@ -1,0 +1,6 @@
+text_style_big = 'color: #5898D4; font-size: 200%; font-weight: bold'
+page_card_text_style = 'color: #5898D4; font-size: 130%;' # font-weight: 300'
+page_card_title_style = 'color: #5898D4; font-size: 180%; font-weight: semibold'
+text_style = 'color: #797979;' # font-size: 130%;' # font-weight: 300'
+log_style = 'color: #797979; font-size: 130%; font-weight: bold'
+page_title_style = 'color: white; font-size: 250%; font-weight: bold;'
