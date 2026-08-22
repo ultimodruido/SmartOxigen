@@ -55,6 +55,16 @@ player_5_oxigen_active = False
 player_6_oxigen_active = False
 
 ####
+# ID mapping: smartrace player -> oxigen car id (0 = unassigned)
+####
+player_1_oxigen_id = 0
+player_2_oxigen_id = 0
+player_3_oxigen_id = 0
+player_4_oxigen_id = 0
+player_5_oxigen_id = 0
+player_6_oxigen_id = 0
+
+####
 # race data
 ####
 race_status = 'Unknown'

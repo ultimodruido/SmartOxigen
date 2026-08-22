@@ -11,6 +11,13 @@ shared_data.oxigen_max_speed = app.storage.general.get('oxigen_max_speed', 255)
 shared_data.oxigen_pitlane_trigger = app.storage.general.get('oxigen_pitlane_trigger', False)
 shared_data.oxigen_pitlane_entry = app.storage.general.get('oxigen_pitlane_entry', 'Pit leave')
 
+for _player in range(1, 7):
+    setattr(
+        shared_data,
+        f'player_{_player}_oxigen_id',
+        app.storage.general.get(f'player_{_player}_oxigen_id', 0),
+    )
+
 def save_smartrace_settings():
     app.storage.general['smartrace_server'] = shared_data.smartrace_server
     app.storage.general['smartrace_port'] = shared_data.smartrace_port
@@ -23,3 +30,7 @@ def save_oxigen_settings():
     app.storage.general['oxigen_max_speed'] = shared_data.oxigen_max_speed
     app.storage.general['oxigen_pitlane_trigger'] = shared_data.oxigen_pitlane_trigger
     app.storage.general['oxigen_pitlane_entry'] = shared_data.oxigen_pitlane_entry
+
+def save_id_mapping():
+    for player in range(1, 7):
+        app.storage.general[f'player_{player}_oxigen_id'] = getattr(shared_data, f'player_{player}_oxigen_id')
